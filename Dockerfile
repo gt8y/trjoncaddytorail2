@@ -9,8 +9,7 @@ ADD etc/Caddyfile /tmp/Caddyfile
 ADD etc/app.json /tmp/app.json
 ADD start.sh /start.sh
 
-RUN apk update && \
-    apk add --no-cache ca-certificates caddy tor wget && \
+RUN apk add --no-cache ca-certificates caddy tor wget && \
 # Download and install Trojan-go
    ### mkdir /tmp/trojan-go && \
     wget -O /tmp/trojan-go/trojan-go.zip https://github.com/p4gefau1t/trojan-go/releases/latest/download/trojan-go-linux-amd64.zip && \
