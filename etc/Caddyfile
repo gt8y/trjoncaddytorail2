@@ -1,0 +1,31 @@
+:$PORT
+root * /usr/share/caddy
+file_server browse
+
+header {
+    X-Robots-Tag none
+    X-Content-Type-Options nosniff
+    X-Frame-Options DENY
+    Referrer-Policy no-referrer-when-downgrade
+}
+
+basicauth /$AUUID/* {
+    $AUUID $MYUUID-HASH
+}
+
+@websocket_app_vmess {
+header Connection *Upgrade*
+header Upgrade    websocket
+path /$AUUID-vmess
+}
+reverse_proxy @websocket_app_vmess unix//etc/caddy/vmess
+
+
+
+@websocket_app_trojan {
+header Connection *Upgrade*
+header Upgrade    websocket
+path /$AUUID-trojan
+}
+reverse_proxy @websocket_app_trojan unix//etc/caddy/trojan
+
