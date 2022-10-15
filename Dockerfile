@@ -25,7 +25,6 @@ RUN apk update && \
     cat /tmp/app.json | sed -e "s/\$AUUID/$AUUID/g" -e "s/\$ParameterSSENCYPT/$ParameterSSENCYPT/g" >/app.json
     
   #
-  ADD usr/local/etc/trojan-go/config.yaml
   install -d /usr/local/etc/trojan-go
   cat << EOF > /usr/local/etc/trojan-go/config.yaml
   run-type: server
