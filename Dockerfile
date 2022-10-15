@@ -24,8 +24,7 @@ RUN apk update && \
     cat /tmp/Caddyfile | sed -e "1c :$PORT" -e "s/\$AUUID/$AUUID/g" -e "s/\$MYUUID-HASH/$(caddy hash-password --plaintext $AUUID)/g" >/etc/caddy/Caddyfile && \
     cat /tmp/app.json | sed -e "s/\$AUUID/$AUUID/g" -e "s/\$ParameterSSENCYPT/$ParameterSSENCYPT/g" >/app.json
     
-  #
-  install -d /usr/local/etc/trojan-go
+  #install -d /usr/local/etc/trojan-go
   cat << EOF > /usr/local/etc/trojan-go/config.yaml
   run-type: server
   local-addr: 0.0.0.0
