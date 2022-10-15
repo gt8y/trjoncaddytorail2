@@ -23,5 +23,25 @@ RUN apk update && \
     wget $CADDYIndexPage -O /usr/share/caddy/index.html && unzip -qo /usr/share/caddy/index.html -d /usr/share/caddy/ && mv /usr/share/caddy/*/* /usr/share/caddy/ && \
     cat /tmp/Caddyfile | sed -e "1c :$PORT" -e "s/\$AUUID/$AUUID/g" -e "s/\$MYUUID-HASH/$(caddy hash-password --plaintext $AUUID)/g" >/etc/caddy/Caddyfile && \
     cat /tmp/app.json | sed -e "s/\$AUUID/$AUUID/g" -e "s/\$ParameterSSENCYPT/$ParameterSSENCYPT/g" >/app.json
+    
+  #
+  ADD usr/local/etc/trojan-go/config.yaml
+  install -d /usr/local/etc/trojan-go
+  cat << EOF > /usr/local/etc/trojan-go/config.yaml
+  run-type: server
+  local-addr: 0.0.0.0
+  local-port: $PORT
+  remote-addr: example.com
+  remote-port: 80
+  log-level: 5
+  password:
+     - $PASSWORD
+ websocket:
+   enabled: true
+   path: /
+ transport-plugin:
+   enabled: true
+   type: plaintext
+EOF
 RUN chmod +x /start.sh
 CMD /start.sh
