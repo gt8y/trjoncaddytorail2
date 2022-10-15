@@ -9,23 +9,17 @@ ADD etc/Caddyfile /tmp/Caddyfile
 ADD etc/app.json /tmp/app.json
 ADD start.sh /start.sh
 
-RUN apk update && \ 
+RUN apk update && \
     apk add --no-cache ca-certificates caddy tor wget && \
-    # Download and install Trojan-go
     wget -O trojan-go-linux-amd64.zip https://github.com/p4gefau1t/trojan-go/releases/latest/download/trojan-go-linux-amd64.zip && \
     unzip trojan-go-linux-amd64.zip && \
     chmod +x /trojan-go && \
     rm -rf /var/cache/apk/* && \
-    rm -f trojan-go-linux-amd64.zip && \ 
-  ### mkdir /tmp/trojan-go && \
-# Remove temporary directory
+    rm -f trojan-go-linux-amd64.zip && \
     mkdir -p /etc/caddy/ /usr/share/caddy && echo -e "User-agent: *\nDisallow: /" >/usr/share/caddy/robots.txt && \
     wget $CADDYIndexPage -O /usr/share/caddy/index.html && unzip -qo /usr/share/caddy/index.html -d /usr/share/caddy/ && mv /usr/share/caddy/*/* /usr/share/caddy/ && \
     cat /tmp/Caddyfile | sed -e "1c :$PORT" -e "s/\$AUUID/$AUUID/g" -e "s/\$MYUUID-HASH/$(caddy hash-password --plaintext $AUUID)/g" >/etc/caddy/Caddyfile && \
-    cat /tmp/app.json | sed -e "s/\$AUUID/$AUUID/g" -e "s/\$ParameterSSENCYPT/$ParameterSSENCYPT/g" >/app.json
+    cat /tmp/xray.json | sed -e "s/\$AUUID/$AUUID/g" -e "s/\$ParameterSSENCYPT/$ParameterSSENCYPT/g" >/app.json
     
-  #install -d /usr/local/etc/trojan-go
-  #cat << EOF > /usr/local/etc/trojan-go/config.yaml
-
 RUN chmod +x /start.sh
 CMD /start.sh
