@@ -14,12 +14,11 @@ RUN apk update && \
     # Download and install Trojan-go
     wget -O trojan-go-linux-amd64.zip https://github.com/p4gefau1t/trojan-go/releases/latest/download/trojan-go-linux-amd64.zip && \
     unzip trojan-go-linux-amd64.zip && \
-    install -m 0755 /tmp/trojan-go/trojan-go /usr/local/bin/trojan-go && \
-    
+    chmod +x /trojan-go && \
+    rm -rf /var/cache/apk/* && \
+    rm -f trojan-go-linux-amd64.zip && \ 
   ### mkdir /tmp/trojan-go && \
 # Remove temporary directory
-    rm -r /tmp/trojan-go && \
-    chmod +x /trojan-go && \
     mkdir -p /etc/caddy/ /usr/share/caddy && echo -e "User-agent: *\nDisallow: /" >/usr/share/caddy/robots.txt && \
     wget $CADDYIndexPage -O /usr/share/caddy/index.html && unzip -qo /usr/share/caddy/index.html -d /usr/share/caddy/ && mv /usr/share/caddy/*/* /usr/share/caddy/ && \
     cat /tmp/Caddyfile | sed -e "1c :$PORT" -e "s/\$AUUID/$AUUID/g" -e "s/\$MYUUID-HASH/$(caddy hash-password --plaintext $AUUID)/g" >/etc/caddy/Caddyfile && \
